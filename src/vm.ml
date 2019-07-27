@@ -171,6 +171,10 @@ let eval (op: opcode) =
     push c;
     incr pc;
   )
+  | Jmp pc' -> (
+    printd (sprintf "Jumping to pc: %d" pc');
+    pc := pc';
+  )
 
 let run (p: program) ?debug:(debug=false) =
   _debug := debug;

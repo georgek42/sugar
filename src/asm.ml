@@ -12,6 +12,7 @@ type instr =
   | Call of string
   | Ret
   | Jc of string
+  | Jmp of string
 
   | Cons
   | Hdl
@@ -37,6 +38,7 @@ let show_instr (op: instr): string =
   | Jc name -> sprintf "\tjc %s" name
   | Pushnil -> "\tpushnil"
   | Cons -> "\tcons"
+  | Jmp name -> sprintf "\tjmp %s" name
 
 type program = instr list
 
@@ -54,6 +56,7 @@ let instr_of_string (s: string): instr =
     | "syscall" -> Syscall arg
     | "call" -> Call arg
     | "jc" -> Jc arg
+    | "jmp" -> Jmp arg
     | _ -> raise (Parse_error (sprintf "Unknown instruction: %s" instr))
   )
   | {|[\t](?<instr>[a-z]*)|} -> (
@@ -89,6 +92,7 @@ let%test "asm_string_roundtrip" =
     Syscall "print_int";
     Call "main";
     Jc "main";
+    Jmp "main";
     Pushnil;
     Hdl;
     Cons;
@@ -111,6 +115,7 @@ let%test "asm_file_roundtrip" =
     Syscall "print_int";
     Call "main";
     Jc "main";
+    Jmp "main";
     Pushnil;
     Hdl;
     Cons;

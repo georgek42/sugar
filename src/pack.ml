@@ -30,6 +30,7 @@ let pack (op: opcode): bitstring =
   | Jc pc -> make_unary 9 pc
   | Pushnil -> make 10
   | Cons -> make 11
+  | Jmp pc -> make_unary 12 pc
 
 let unpack (b: bitstring): program =
   let b = ref b in
@@ -70,6 +71,11 @@ let unpack (b: bitstring): program =
         | {| op: 8; param: 32 |} -> Jc (Int32.to_int_exn param) |> add; shift_by 40
         | {| _ |} -> raise Not_implemented
       )
+      | 12 -> (
+        match%bitstring !b with
+        | {| op: 8; param: 32 |} -> Jmp (Int32.to_int_exn param) |> add; shift_by 40
+        | {| _ |} -> raise Not_implemented
+      )
       | 3 -> add Ret; shift_by 8
       | 4 -> add Addi; shift_by 8
       | 5 -> add Divi; shift_by 8
@@ -103,6 +109,7 @@ let%test "pack_roundtrip" =
     Addi;
     Hdl;
     Cons;
+    Jmp 11;
     Pushnil;
     Divi
   |] in
@@ -124,6 +131,7 @@ let %test "pack_file_roundtrip" =
     Addi;
     Hdl;
     Cons;
+    Jmp 11;
     Pushnil;
     Divi
   |] in

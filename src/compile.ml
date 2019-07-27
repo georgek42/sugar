@@ -34,6 +34,11 @@ let compile (prog: Asm.program): Opcode.program =
       | None -> raise (Compile_error (sprintf "undefined label: %s" label))
       | Some pc' -> Array.set prog' !pc (Opcode.Jc pc'); incr pc
     )
+    | Asm.Jmp label -> (
+      match Hashtbl.find symtab label with
+      | None -> raise (Compile_error (sprintf "undefined label: %s" label))
+      | Some pc' -> Array.set prog' !pc (Opcode.Jmp pc'); incr pc
+    )
     | Asm.Ret -> Array.set prog' !pc Opcode.Ret; incr pc
     | Asm.Addi -> Array.set prog' !pc Opcode.Addi; incr pc
     | Asm.Divi -> Array.set prog' !pc Opcode.Divi; incr pc
@@ -55,6 +60,7 @@ let%test "test_compile" =
     Ret;
     Label "mean";
     Jc "mean";
+    Jmp "mean";
     Pop 1;
     Addi;
     Addi;
@@ -76,6 +82,7 @@ let%test "test_compile" =
     Hdl;
     Ret;
     Jc 6;
+    Jmp 6;
     Pop 1;
     Addi;
     Addi;

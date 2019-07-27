@@ -8,6 +8,7 @@ type opcode =
   | Syscall of int
   | Ret
   | Jc of int
+  | Jmp of int
 
   | Cons
   | Hdl
