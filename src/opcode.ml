@@ -3,7 +3,7 @@ type opcode =
   | Pushr of int
   | Pop of int
 
-  | Call of string
+  | Call of int
   | Ret
 
   | Addi

@@ -22,17 +22,6 @@ type program = opcode array
 
 let pc: pc ref = ref 0
 
-let labels: (string, int) Hashtbl.t = Hashtbl.create (module String)
-let addl (name: string) (pc: int) = Hashtbl.set ~key:name ~data:pc labels
-let getl (name: string) =
-  match Hashtbl.find labels name with
-  | Some pc -> pc
-  | None -> raise (Fault (sprintf "Label not defined: %s" name))
-let show_labels () =
-  let l = Hashtbl.to_alist labels in
-  sprintf "Labels:";
-  List.iter l ~f:(fun (label, pc) -> printd (sprintf "%s: %d" label pc))
-
 let stack: st ref = ref (Stack.create ())
 
 let push (v: value) = Stack.push !stack v 
@@ -79,24 +68,12 @@ let eval (op: opcode) =
     set r v;
     incr pc
   )
-  | Call name -> (
-    printd (sprintf "Calling %s" name);
-    match name with
-    | "vm_print_int" -> (
-      printd (sprintf "Calling builtin vm_print_int");
-      let v = pop () in
-      match v with
-      | Int i -> printf "%d" i; incr pc
-      | _ -> raise (Fault (sprintf "vm_print_int on a non-int value %s" (show_value v)))
-    )
-    | _ -> (
-      let st = State (!pc + 1, !reg) in
-      push st;
-      printd (sprintf "Pushing state %s onto stack" (show_value st));
-      let pc' = getl name in
-      printd (sprintf "New PC: %d" pc');
-      pc := pc'
-    )
+  | Call pc' -> (
+    printd (sprintf "Calling funcion at %d" pc');
+    let st = State (!pc + 1, !reg) in
+    push st;
+    printd (sprintf "Pushing state %s onto stack" (show_value st));
+    pc := pc'
   )
   | Ret -> (
     printd "Returning from a function call";

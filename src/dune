@@ -1,4 +1,5 @@
 (library
   (name sugar)
-  (preprocess (pps ppx_jane ppx_deriving.std))
-  (libraries core))
+  (inline_tests)
+  (preprocess (pps ppx_jane ppx_deriving.std bitstring.ppx ppx_regexp))
+  (libraries core bitstring))

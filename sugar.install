@@ -6,3 +6,6 @@ lib: [
 bin: [
   "_build/install/default/bin/sg" {"sg"}
 ]
+doc: [
+  "_build/install/default/doc/sugar/README.md"
+]

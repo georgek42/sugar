@@ -7,7 +7,10 @@ format:
 	dune build @fmt --auto-promote
 
 test: build
-	dune runtest -f
+	dune runtest -f --profile release
 
 clean:
 	dune clean
+
+utop:
+	dune utop --profile release

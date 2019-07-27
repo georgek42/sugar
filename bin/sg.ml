@@ -1,9 +1,10 @@
 open Core
 open Sugar
 open Sugar.Opcode
+open Bitstring
 
-let () =
-  let prog = [|
+let () = ()
+  (* let prog = [|
     (* main *)
     Pushi 3;
     Pushi 2;
@@ -23,4 +24,4 @@ let () =
     Ret;
   |] in
   Vm.addl "mean" 6;
-  Vm.run prog ~debug:false;
+  Vm.run prog ~debug:false; *)
