@@ -3,6 +3,7 @@ open Core
 type instr =
   | Label of string
 
+  | Pushnil
   | Pushi of int
   | Pushr of int
   | Pop of int
@@ -33,6 +34,7 @@ let show_instr (op: instr): string =
   | Divi -> "\tdivi"
   | Hdl -> "\thdl"
   | Jc name -> sprintf "\tjc %s" name
+  | Pushnil -> "\tpushnil"
 
 type program = instr list
 
@@ -58,6 +60,7 @@ let instr_of_string (s: string): instr =
     | "addi" -> Addi
     | "divi" -> Divi
     | "hdl" -> Hdl
+    | "pushnil" -> Pushnil
     | _ -> raise (Parse_error (sprintf "Unknown instruction: %s" instr))
   )
   | _ -> raise (Parse_error (sprintf "Unrecognized token: %s" s))
@@ -80,6 +83,7 @@ let%test "asm_string_roundtrip" =
     Syscall "print_int";
     Call "main";
     Jc "main";
+    Pushnil;
     Hdl;
     Ret;
     Addi;
@@ -100,6 +104,7 @@ let%test "asm_file_roundtrip" =
     Syscall "print_int";
     Call "main";
     Jc "main";
+    Pushnil;
     Hdl;
     Ret;
     Addi;

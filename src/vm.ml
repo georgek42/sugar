@@ -159,6 +159,10 @@ let eval (op: opcode) =
       unset_cond ();
     )
   )
+  | Pushnil -> (
+    push Nil;
+    incr pc;
+  )
 
 let run (p: program) ?debug:(debug=false) =
   _debug := debug;

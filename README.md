@@ -17,6 +17,7 @@ The assembly provides a higher-level interface to the VM, with labels instead of
 
 ## Bytecode
 ### Stack
+* `pushnil` -- push nil onto stack
 * `pushi <int>` -- push int onto stack
 * `pushr <register_id` -- push from register onto stack
 * `pop <register_id>` -- pop from stack into register

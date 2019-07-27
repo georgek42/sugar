@@ -1,4 +1,5 @@
 type opcode =
+  | Pushnil
   | Pushi of int
   | Pushr of int
   | Pop of int
