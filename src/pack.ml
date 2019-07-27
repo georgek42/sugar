@@ -32,6 +32,7 @@ let pack (op: opcode): bitstring =
   | Cons -> make 11
   | Jmp pc -> make_unary 12 pc
   | Halt -> make 13
+  | Pop -> make 14
 
 let unpack (b: bitstring): program =
   let b = ref b in
@@ -84,6 +85,7 @@ let unpack (b: bitstring): program =
       | 10 -> add Pushnil; shift_by 8
       | 11 -> add Cons; shift_by 8
       | 13 -> add Halt; shift_by 8
+      | 14 -> add Pop; shift_by 8
       | _ -> raise Not_implemented
   )
   done;
@@ -114,6 +116,7 @@ let%test "pack_roundtrip" =
     Cons;
     Jmp 11;
     Pushnil;
+    Pop;
     Divi
   |] in
   let packed = pack_all prog in
@@ -137,6 +140,7 @@ let %test "pack_file_roundtrip" =
     Cons;
     Jmp 11;
     Pushnil;
+    Pop;
     Divi
   |] in
   prog |> to_file "tmp.sg";

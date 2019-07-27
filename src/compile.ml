@@ -46,6 +46,7 @@ let compile (prog: Asm.program): Opcode.program =
     | Asm.Pushnil -> Array.set prog' !pc Opcode.Pushnil; incr pc
     | Asm.Cons -> Array.set prog' !pc Opcode.Cons; incr pc
     | Asm.Halt -> Array.set prog' !pc Opcode.Halt; incr pc
+    | Asm.Pop -> Array.set prog' !pc Opcode.Pop; incr pc
   ));
   Array.slice prog' 0 !pc
 
@@ -73,6 +74,7 @@ let%test "test_compile" =
     Pushr 2;
     Divi;
     Pushr 1;
+    Pop;
     Ret
   ] in
   let open Opcode in
@@ -96,6 +98,7 @@ let%test "test_compile" =
     Pushr 2;
     Divi;
     Pushr 1;
+    Pop;
     Ret
   |] in
   let prog'' = compile prog in

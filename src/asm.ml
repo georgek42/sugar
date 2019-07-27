@@ -7,6 +7,7 @@ type instr =
   | Pushi of int
   | Pushr of int
   | Popr of int
+  | Pop
 
   | Syscall of string
   | Call of string
@@ -41,6 +42,7 @@ let show_instr (op: instr): string =
   | Cons -> "\tcons"
   | Jmp name -> sprintf "\tjmp %s" name
   | Halt -> "\thalt"
+  | Pop -> "\tpop"
 
 type program = instr list
 
@@ -70,6 +72,7 @@ let instr_of_string (s: string): instr =
     | "pushnil" -> Pushnil
     | "cons" -> Cons
     | "halt" -> Halt
+    | "pop" -> Pop
     | _ -> raise (Parse_error (sprintf "Unknown instruction: %s" instr))
   )
   | _ -> raise (Parse_error (sprintf "Unrecognized token: %s" s))
@@ -103,6 +106,7 @@ let%test "asm_string_roundtrip" =
     Cons;
     Ret;
     Addi;
+    Pop;
     Divi
   ] in
   let prog_s = show_prog prog in
@@ -127,6 +131,7 @@ let%test "asm_file_roundtrip" =
     Cons;
     Ret;
     Addi;
+    Pop;
     Divi
   ] in
   to_file prog "tmp.sugar";

@@ -3,6 +3,7 @@ type opcode =
   | Pushi of int
   | Pushr of int
   | Popr of int
+  | Pop
 
   | Call of int
   | Syscall of int

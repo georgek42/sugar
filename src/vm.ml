@@ -179,6 +179,11 @@ let eval (op: opcode) =
     printd "Halting execution";
     pc := 99999999;
   )
+  | Pop -> (
+    printd "Discarding top value from the stack";
+    let _ = pop () in
+    incr pc;
+  )
 
 let run (p: program) ?debug:(debug=false) =
   _debug := debug;
