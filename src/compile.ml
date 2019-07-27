@@ -2,6 +2,10 @@ open Core
 
 exception Compile_error of string
 
+let syscall_id = function
+  | "print_int" -> 0
+  | s -> raise (Compile_error (sprintf "Unknown syscall: %s" s))
+
 let compile (prog: Asm.program): Opcode.program =
   let prog': Opcode.opcode array = Array.create ~len:(List.length prog) Opcode.Ret in
   let pc = ref 0 in
@@ -19,6 +23,7 @@ let compile (prog: Asm.program): Opcode.program =
     | Asm.Pushi i -> Array.set prog' !pc (Opcode.Pushi i); incr pc
     | Asm.Pushr rid -> Array.set prog' !pc (Opcode.Pushr rid); incr pc
     | Asm.Pop rid -> Array.set prog' !pc (Opcode.Pop rid); incr pc
+    | Asm.Syscall name -> Array.set prog' !pc (Opcode.Syscall (syscall_id name)); incr pc 
     | Asm.Call label -> (
       match Hashtbl.find symtab label with
       | None -> raise (Compile_error (sprintf "undefined label: %s" label))
@@ -37,6 +42,7 @@ let%test "test_compile" =
     Pushi 3;
     Pushi 1;
     Call "mean";
+    Syscall "print_int";
     Ret;
     Label "mean";
     Pop 1;
@@ -53,7 +59,8 @@ let%test "test_compile" =
   let prog' = [|
     Pushi 3;
     Pushi 1;
-    Call 4;
+    Call 5;
+    Syscall 0;
     Ret;
     Pop 1;
     Addi;

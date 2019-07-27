@@ -7,6 +7,7 @@ type instr =
   | Pushr of int
   | Pop of int
 
+  | Syscall of string
   | Call of string
   | Ret
 
@@ -22,6 +23,7 @@ let show_instr (op: instr): string =
   | Pushi x -> sprintf "\tpushi %d" x
   | Pushr rid -> sprintf "\tpushr $%d" rid
   | Pop rid -> sprintf "\tpop $%d" rid
+  | Syscall name -> sprintf "\tsyscall %s" name
   | Call name -> sprintf "\tcall %s" name
   | Ret -> "\tret"
   | Addi -> "\taddi"
@@ -40,6 +42,7 @@ let instr_of_string (s: string): instr =
     | "pushi" -> Pushi (Int.of_string arg)
     | "pushr" -> Pushr (Int.of_string (String.slice arg 1 (String.length arg)))
     | "pop" -> Pop (Int.of_string (String.slice arg 1 (String.length arg)))
+    | "syscall" -> Syscall arg
     | "call" -> Call arg
     | _ -> raise (Parse_error (sprintf "Unknown instruction: %s" instr))
   )
@@ -67,6 +70,7 @@ let%test "asm_string_roundtrip" =
     Pushi 1;
     Pushr 2;
     Pop 3;
+    Syscall "print_int";
     Call "main";
     Ret;
     Addi;
@@ -84,6 +88,7 @@ let%test "asm_file_roundtrip" =
     Pushi 1;
     Pushr 2;
     Pop 3;
+    Syscall "print_int";
     Call "main";
     Ret;
     Addi;

@@ -6,7 +6,7 @@ A simple, slow, stack-based bytecode VM
 The VM executes bytecode defined in `src/opcode.ml`. A higher-level assembly-like language is available, which gets compiled to bytecode (`src/asm.ml`)
 
 ## Syscalls
-* id: `1`, name: `print_int` -- prints an integer from the top of the stack (non-destructive_)
+* id: `0`, name: `print_int` -- prints an integer from the top of the stack (non-destructive_)
 
 ## Assembly
 The assembly provides a higher-level interface to the VM, with labels instead of offsets. Forward-declarations are supported.

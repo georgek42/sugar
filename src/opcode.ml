@@ -4,6 +4,7 @@ type opcode =
   | Pop of int
 
   | Call of int
+  | Syscall of int
   | Ret
 
   | Addi

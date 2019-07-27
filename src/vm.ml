@@ -27,6 +27,10 @@ let pop (): value =
   match Stack.pop !stack with
   | Some v -> v
   | None -> raise (Fault "pop from empty stack")
+let peek (): value =
+  match Stack.top !stack with
+  | Some v -> v
+  | None -> raise (Fault "peek from empty stack")
 let show_stack () =
   let l = Stack.to_list !stack in
   printd "Stack:";
@@ -65,6 +69,18 @@ let eval (op: opcode) =
     printd (sprintf "Storing value %s into $%d" (show_value v) r);
     set r v;
     incr pc
+  )
+  | Syscall id -> (
+    printd (sprintf "Executing syscall %d" id);
+    match id with
+    | 0 -> (
+      printd "Executing print_int";
+      let v = peek () in
+      match v with
+      | Int i -> printf "%d" i; incr pc
+      | _ -> raise (Fault (sprintf "invalid argument for print_int: %s" (show_value v)))
+    )
+    | _ -> raise (Fault (sprintf "Unknown syscall: %d" id))
   )
   | Call pc' -> (
     printd (sprintf "Calling funcion at %d" pc');
