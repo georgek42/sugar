@@ -29,6 +29,8 @@ The assembly provides a higher-level interface to the VM, with labels instead of
 * `jc <pc>` -- jump to program counter pc if the condition bit is set, unset condition bit
 
 ### List operations
+* `cons`
+    Pop a, b off the stack, push Cons (a, b) onto the stack
 * `hdl`
     Pop head of list at the top of the stack, push it on the stack. Distructive operation, removes list off the stack, pushes tail, head. If the list is empty, the condition bit gets set.
 

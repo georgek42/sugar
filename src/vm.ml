@@ -163,6 +163,14 @@ let eval (op: opcode) =
     push Nil;
     incr pc;
   )
+  | Cons -> (
+    let a = pop () in
+    let b = pop () in
+    let c = Cons (a, b) in
+    printd (sprintf "Pushing %s onto stack" (show_value c));
+    push c;
+    incr pc;
+  )
 
 let run (p: program) ?debug:(debug=false) =
   _debug := debug;

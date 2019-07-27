@@ -39,6 +39,7 @@ let compile (prog: Asm.program): Opcode.program =
     | Asm.Divi -> Array.set prog' !pc Opcode.Divi; incr pc
     | Asm.Hdl -> Array.set prog' !pc Opcode.Hdl; incr pc
     | Asm.Pushnil -> Array.set prog' !pc Opcode.Pushnil; incr pc
+    | Asm.Cons -> Array.set prog' !pc Opcode.Cons; incr pc
   ));
   Array.slice prog' 0 !pc
 
@@ -59,6 +60,7 @@ let%test "test_compile" =
     Addi;
     Pop 2;
     Pushnil;
+    Cons;
     Pushi 3;
     Pushr 2;
     Divi;
@@ -79,6 +81,7 @@ let%test "test_compile" =
     Addi;
     Pop 2;
     Pushnil;
+    Cons;
     Pushi 3;
     Pushr 2;
     Divi;
