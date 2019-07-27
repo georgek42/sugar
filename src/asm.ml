@@ -75,6 +75,7 @@ let prog_of_string (s: string): program =
   s
   |> String.split_lines
   |> List.filter ~f:(fun s -> not (String.is_prefix (String.strip s) ~prefix:"#"))
+  |> List.filter ~f:(fun s -> String.length (String.strip s) > 0)
   |> List.map ~f:instr_of_string
 
 let to_file (p: program) (filename: string) =
