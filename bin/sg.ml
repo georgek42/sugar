@@ -19,7 +19,7 @@ let () =
     match Array.get Sys.argv 1 with
     | "run" -> (
       let filename = Array.get Sys.argv 2 in
-      let debug = if Sys.argv |> Array.filter ~f:(fun a -> a = "debug") |> Array.length > 0 then true else false in
+      let debug = if Sys.argv |> Array.filter ~f:(fun a -> a = "--debug") |> Array.length > 0 then true else false in
       let prog = Asm.from_file filename |> Compile.compile in
       Vm.run prog ~debug:debug
     )
@@ -31,7 +31,7 @@ let () =
     )
     | "exec" -> (
       let filename = Array.get Sys.argv 2 in
-      let debug = if Sys.argv |> Array.filter ~f:(fun a -> a = "debug") |> Array.length > 0 then true else false in
+      let debug = if Sys.argv |> Array.filter ~f:(fun a -> a = "--debug") |> Array.length > 0 then true else false in
       let prog = Pack.from_file filename in
       Vm.run prog ~debug:debug
     )
