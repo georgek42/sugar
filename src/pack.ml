@@ -26,6 +26,7 @@ let pack (op: opcode): bitstring =
   | Ret -> make 3
   | Addi -> make 4
   | Divi -> make 5
+  | Hdl -> make 8
 
 let unpack (b: bitstring): program =
   let b = ref b in
@@ -64,6 +65,7 @@ let unpack (b: bitstring): program =
       | 3 -> add Ret; shift_by 8
       | 4 -> add Addi; shift_by 8
       | 5 -> add Divi; shift_by 8
+      | 8 -> add Hdl; shift_by 8
       | _ -> raise Not_implemented
   )
   done;
@@ -88,6 +90,7 @@ let%test "pack_roundtrip" =
     Syscall 0;
     Ret;
     Addi;
+    Hdl;
     Divi
   |] in
   let packed = pack_all prog in
@@ -105,6 +108,7 @@ let %test "pack_file_roundtrip" =
     Syscall 0;
     Ret;
     Addi;
+    Hdl;
     Divi
   |] in
   prog |> to_file "tmp.sg";

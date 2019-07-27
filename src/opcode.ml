@@ -7,6 +7,8 @@ type opcode =
   | Syscall of int
   | Ret
 
+  | Hdl
+
   | Addi
   | Divi
   [@@deriving show]

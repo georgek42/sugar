@@ -32,6 +32,7 @@ let compile (prog: Asm.program): Opcode.program =
     | Asm.Ret -> Array.set prog' !pc Opcode.Ret; incr pc
     | Asm.Addi -> Array.set prog' !pc Opcode.Addi; incr pc
     | Asm.Divi -> Array.set prog' !pc Opcode.Divi; incr pc
+    | Asm.Hdl -> Array.set prog' !pc Opcode.Hdl; incr pc
   ));
   Array.slice prog' 0 !pc
 
@@ -43,6 +44,7 @@ let%test "test_compile" =
     Pushi 1;
     Call "mean";
     Syscall "print_int";
+    Hdl;
     Ret;
     Label "mean";
     Pop 1;
@@ -59,8 +61,9 @@ let%test "test_compile" =
   let prog' = [|
     Pushi 3;
     Pushi 1;
-    Call 5;
+    Call 6;
     Syscall 0;
+    Hdl;
     Ret;
     Pop 1;
     Addi;

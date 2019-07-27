@@ -11,6 +11,8 @@ type instr =
   | Call of string
   | Ret
 
+  | Hdl
+
   | Addi
   | Divi
   [@@deriving show]
@@ -28,6 +30,7 @@ let show_instr (op: instr): string =
   | Ret -> "\tret"
   | Addi -> "\taddi"
   | Divi -> "\tdivi"
+  | Hdl -> "\thdl"
 
 type program = instr list
 
@@ -51,6 +54,7 @@ let instr_of_string (s: string): instr =
     | "ret" -> Ret
     | "addi" -> Addi
     | "divi" -> Divi
+    | "hdl" -> Hdl
     | _ -> raise (Parse_error (sprintf "Unknown instruction: %s" instr))
   )
   | _ -> raise (Parse_error (sprintf "Unrecognized token: %s" s))
@@ -72,6 +76,7 @@ let%test "asm_string_roundtrip" =
     Pop 3;
     Syscall "print_int";
     Call "main";
+    Hdl;
     Ret;
     Addi;
     Divi
@@ -90,6 +95,7 @@ let%test "asm_file_roundtrip" =
     Pop 3;
     Syscall "print_int";
     Call "main";
+    Hdl;
     Ret;
     Addi;
     Divi

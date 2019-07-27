@@ -6,17 +6,27 @@ exception Fault of string
 type pc = int
 and st = value Stack.t
 and registers = (int, value) Hashtbl.t
+and cond = bool
 and value =
   | Int of int
-  | State of pc * (int, value) Hashtbl.t
+  | Cons of value * value
+  | Nil
+  | State of pc * cond * (int, value) Hashtbl.t
 
 let rec show_value (v: value) =
   match v with
-  | Int i -> sprintf "Int %d" i 
-  | State (pc, reg) -> sprintf "State %d, <registers>" pc
+  | Int i -> sprintf "Int %d" i
+  | Cons (v, v') -> sprintf "Cons (%s, %s)" (show_value v) (show_value v')
+  | Nil -> "Nil"
+  | State (pc, cond, reg) -> sprintf "State %d, Cond: %s <registers>" pc (if cond then "true" else "false")
 
 let _debug = ref false
 let printd msg = if !_debug then printf "%s\n" msg else ()
+
+let cond: cond ref = ref false
+
+let set_cond () = cond := true
+let unset_cond () = cond := false
 
 let pc: pc ref = ref 0
 
@@ -84,7 +94,7 @@ let eval (op: opcode) =
   )
   | Call pc' -> (
     printd (sprintf "Calling funcion at %d" pc');
-    let st = State (!pc + 1, !reg) in
+    let st = State (!pc + 1, !cond, !reg) in
     push st;
     printd (sprintf "Pushing state %s onto stack" (show_value st));
     pc := pc'
@@ -93,9 +103,10 @@ let eval (op: opcode) =
     printd "Returning from a function call";
     let v = pop () in
     match v with
-    | State (pc', reg') -> (
+    | State (pc', cond', reg') -> (
       pc := pc';
       reg := reg';
+      cond := cond';
       printd (sprintf "New PC: %d" !pc)
     )
     | _ -> raise (Fault (sprintf "ret on non-state value: %s" (show_value v)))
@@ -122,10 +133,26 @@ let eval (op: opcode) =
     )
     | _, _ -> raise (Fault (sprintf "divi on non-int values %s, %s" (show_value a) (show_value b)))
   )
+  | Hdl -> (
+    let l = pop () in
+    match l with
+    | Cons (v, v') -> (
+      printd (sprintf "Placing value %s at the top of the stack" (show_value v));
+      push v';
+      push v;
+      incr pc
+    )
+    | Nil -> (
+      printd "Pop on empty list, setting cond flag";
+      set_cond ();
+      incr pc;
+    )
+    | _ -> raise (Fault (sprintf "hdl on non-list value %s" (show_value l)))
+  )
 
 let run (p: program) ?debug:(debug=false) =
   _debug := debug;
-  push (State (9999999, !reg)); (* Return from main *)
+  push (State (9999999, !cond, !reg)); (* Return from main *)
   let pend = Array.length p in
   while !pc < pend do
     eval (Array.get p !pc);
