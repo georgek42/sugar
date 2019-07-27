@@ -69,7 +69,10 @@ let instr_of_string (s: string): instr =
   | _ -> raise (Parse_error (sprintf "Unrecognized token: %s" s))
 
 let prog_of_string (s: string): program =
-  s |> String.split_lines |> List.map ~f:instr_of_string
+  s
+  |> String.split_lines
+  |> List.filter ~f:(fun s -> not (String.is_prefix (String.strip s) ~prefix:"#"))
+  |> List.map ~f:instr_of_string
 
 let to_file (p: program) (filename: string) =
   p |> show_prog |> Out_channel.write_all filename
