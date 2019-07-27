@@ -1,0 +1,18 @@
+main:
+	pushi 3
+	pushi 2
+	pushi 1
+	call mean
+	syscall print_int
+	pop $1
+	ret
+mean:
+	pop $2
+	addi
+	addi
+	pop $1
+	pushi 3
+	pushr $1
+	divi
+	pushr $2
+	ret
