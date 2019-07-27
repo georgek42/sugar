@@ -8,12 +8,10 @@ main:
 	halt
 mean:
 	# Calculate (a + b + c) / 3
-	popr $2
 	addi
 	addi
 	popr $1
 	pushi 3
 	pushr $1
 	divi
-	pushr $2
 	ret

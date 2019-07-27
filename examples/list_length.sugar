@@ -1,0 +1,42 @@
+#let length l =
+#    match l with
+#    | _ :: t -> 1 + (length t)
+#    | [] -> 0
+#
+#let main () =
+#    let l = [1;2;3;4;5] in
+#    let len = length l in
+#    print_int len
+
+main:
+	pushnil
+	pushi 5
+	cons
+	pushi 4
+	cons
+	pushi 3
+	cons
+	pushi 2
+	cons
+	pushi 1
+	cons
+	call length
+	syscall print_int
+	halt
+
+length:
+	popr $10
+	hdl
+	jc empty
+
+	pop
+	pushi 1
+	call length
+	addi
+	pushr $10
+	ret
+
+empty:
+	pushi 0
+	pushr $10
+	ret

@@ -7,18 +7,22 @@ type pc = int
 and st = value Stack.t
 and registers = (int, value) Hashtbl.t
 and cond = bool
+and base = state Stack.t
+and state = pc * cond * registers
 and value =
   | Int of int
   | Cons of value * value
   | Nil
-  | State of pc * cond * (int, value) Hashtbl.t
 
 let rec show_value (v: value) =
   match v with
   | Int i -> sprintf "Int %d" i
   | Cons (v, v') -> sprintf "Cons (%s, %s)" (show_value v) (show_value v')
   | Nil -> "Nil"
-  | State (pc, cond, reg) -> sprintf "State %d, Cond: %s <registers>" pc (if cond then "true" else "false")
+
+let show_state (s: state) =
+  match s with
+  | (pc, cond, base) -> sprintf "State (%d, %s, <registers>)" pc (if cond then "true" else "false")
 
 let _debug = ref false
 let printd msg = if !_debug then printf "%s\n" msg else ()
@@ -58,6 +62,18 @@ let show_registers () =
   printd "Registers:\n";
   List.iter l ~f:(fun (rid, v) -> printd (sprintf "$%d: %s" rid (show_value v)))
 
+let base: base = Stack.create ()
+
+let push_base () =
+  Stack.push base (!pc + 1, !cond, !reg)
+let pop_base () =
+  match Stack.pop base with
+  | Some b -> b
+  | None -> (
+    printd "Return without a base pointer, assuming halt";
+    (9999999, !cond, !reg)
+  )
+
 let eval (op: opcode) =
   printd (sprintf "Evaluating: %s" (show_opcode op));
   match op with
@@ -94,22 +110,16 @@ let eval (op: opcode) =
   )
   | Call pc' -> (
     printd (sprintf "Calling funcion at %d" pc');
-    let st = State (!pc + 1, !cond, !reg) in
-    push st;
-    printd (sprintf "Pushing state %s onto stack" (show_value st));
+    push_base ();
     pc := pc'
   )
   | Ret -> (
     printd "Returning from a function call";
-    let v = pop () in
-    match v with
-    | State (pc', cond', reg') -> (
-      pc := pc';
-      reg := reg';
-      cond := cond';
-      printd (sprintf "New PC: %d" !pc)
-    )
-    | _ -> raise (Fault (sprintf "ret on non-state value: %s" (show_value v)))
+    let (pc', cond', reg') = pop_base () in
+    pc := pc';
+    reg := reg';
+    cond := cond';
+    printd (sprintf "New PC: %d" !pc);
   )
   | Addi -> (
     let a = pop () in
