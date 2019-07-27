@@ -1,0 +1,8 @@
+lib: [
+  "_build/install/default/lib/sugar/META" {"META"}
+  "_build/install/default/lib/sugar/dune-package" {"dune-package"}
+  "_build/install/default/lib/sugar/opam" {"opam"}
+]
+bin: [
+  "_build/install/default/bin/sg" {"sg"}
+]

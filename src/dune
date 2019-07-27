@@ -1,0 +1,4 @@
+(library
+  (name sugar)
+  (preprocess (pps ppx_jane ppx_deriving.std))
+  (libraries core))

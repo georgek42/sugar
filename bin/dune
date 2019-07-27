@@ -1,0 +1,5 @@
+(executable
+  (name sg)
+  (public_name sg)
+  (preprocess (pps ppx_jane))
+  (libraries core sugar))
