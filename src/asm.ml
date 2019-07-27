@@ -10,6 +10,7 @@ type instr =
   | Syscall of string
   | Call of string
   | Ret
+  | Jc of string
 
   | Hdl
 
@@ -31,6 +32,7 @@ let show_instr (op: instr): string =
   | Addi -> "\taddi"
   | Divi -> "\tdivi"
   | Hdl -> "\thdl"
+  | Jc name -> sprintf "\tjc %s" name
 
 type program = instr list
 
@@ -47,6 +49,7 @@ let instr_of_string (s: string): instr =
     | "pop" -> Pop (Int.of_string (String.slice arg 1 (String.length arg)))
     | "syscall" -> Syscall arg
     | "call" -> Call arg
+    | "jc" -> Jc arg
     | _ -> raise (Parse_error (sprintf "Unknown instruction: %s" instr))
   )
   | {|[\t](?<instr>[a-z]*)|} -> (
@@ -76,6 +79,7 @@ let%test "asm_string_roundtrip" =
     Pop 3;
     Syscall "print_int";
     Call "main";
+    Jc "main";
     Hdl;
     Ret;
     Addi;
@@ -95,6 +99,7 @@ let%test "asm_file_roundtrip" =
     Pop 3;
     Syscall "print_int";
     Call "main";
+    Jc "main";
     Hdl;
     Ret;
     Addi;

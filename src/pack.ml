@@ -27,6 +27,7 @@ let pack (op: opcode): bitstring =
   | Addi -> make 4
   | Divi -> make 5
   | Hdl -> make 8
+  | Jc pc -> make_unary 9 pc
 
 let unpack (b: bitstring): program =
   let b = ref b in
@@ -62,6 +63,11 @@ let unpack (b: bitstring): program =
         | {| op: 8; param: 32 |} -> Syscall (Int32.to_int_exn param) |> add; shift_by 40
         | {| _ |} -> raise Not_implemented
       )
+      | 9 -> (
+        match%bitstring !b with
+        | {| op: 8; param: 32 |} -> Jc (Int32.to_int_exn param) |> add; shift_by 40
+        | {| _ |} -> raise Not_implemented
+      )
       | 3 -> add Ret; shift_by 8
       | 4 -> add Addi; shift_by 8
       | 5 -> add Divi; shift_by 8
@@ -88,6 +94,7 @@ let%test "pack_roundtrip" =
     Pop 3;
     Call 4;
     Syscall 0;
+    Jc 12;
     Ret;
     Addi;
     Hdl;
@@ -106,6 +113,7 @@ let %test "pack_file_roundtrip" =
     Pop 3;
     Call 4;
     Syscall 0;
+    Jc 12;
     Ret;
     Addi;
     Hdl;

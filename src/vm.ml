@@ -149,6 +149,16 @@ let eval (op: opcode) =
     )
     | _ -> raise (Fault (sprintf "hdl on non-list value %s" (show_value l)))
   )
+  | Jc pc' -> (
+    match !cond with
+    | false -> printd "Condition bit not set, resuming"; incr pc
+    | true -> (
+      printd (sprintf "Condition bit set, jumping to %d" pc');
+      pc := pc';
+      printd "Clearing condition bit";
+      unset_cond ();
+    )
+  )
 
 let run (p: program) ?debug:(debug=false) =
   _debug := debug;

@@ -13,7 +13,7 @@ The assembly provides a higher-level interface to the VM, with labels instead of
 * `<label:>` -- define label at current offset
 * `call <name>` -- call a function by name, arguments passed in the stack in callee order
 * `syscall <name>` -- execute a system call by name (see Syscalls)
-* `jc <label>` -- jump to label if the condition bit is set
+* `jc <label>` -- jump to label if the condition bit is set, unset condition bit
 
 ## Bytecode
 ### Stack
@@ -25,7 +25,7 @@ The assembly provides a higher-level interface to the VM, with labels instead of
 * `call <offset>` -- call a function at offset, arguments passed in the stack in callee order
 * `syscall <id>` -- execute a system call with id (see #syscalls)
 * `ret` -- return from a function, return value on the top of the stack
-* `jc <pc>` -- jump to program counter pc if the condition bit is set
+* `jc <pc>` -- jump to program counter pc if the condition bit is set, unset condition bit
 
 ### List operations
 * `hdl`

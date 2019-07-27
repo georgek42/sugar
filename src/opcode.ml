@@ -6,6 +6,7 @@ type opcode =
   | Call of int
   | Syscall of int
   | Ret
+  | Jc of int
 
   | Hdl
 
