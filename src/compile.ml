@@ -22,7 +22,7 @@ let compile (prog: Asm.program): Opcode.program =
     | Asm.Label label -> ()
     | Asm.Pushi i -> Array.set prog' !pc (Opcode.Pushi i); incr pc
     | Asm.Pushr rid -> Array.set prog' !pc (Opcode.Pushr rid); incr pc
-    | Asm.Pop rid -> Array.set prog' !pc (Opcode.Pop rid); incr pc
+    | Asm.Popr rid -> Array.set prog' !pc (Opcode.Popr rid); incr pc
     | Asm.Syscall name -> Array.set prog' !pc (Opcode.Syscall (syscall_id name)); incr pc 
     | Asm.Call label -> (
       match Hashtbl.find symtab label with
@@ -63,10 +63,10 @@ let%test "test_compile" =
     Jc "mean";
     Jmp "mean";
     Halt;
-    Pop 1;
+    Popr 1;
     Addi;
     Addi;
-    Pop 2;
+    Popr 2;
     Pushnil;
     Cons;
     Pushi 3;
@@ -86,10 +86,10 @@ let%test "test_compile" =
     Jc 6;
     Jmp 6;
     Halt;
-    Pop 1;
+    Popr 1;
     Addi;
     Addi;
-    Pop 2;
+    Popr 2;
     Pushnil;
     Cons;
     Pushi 3;

@@ -2,7 +2,7 @@ type opcode =
   | Pushnil
   | Pushi of int
   | Pushr of int
-  | Pop of int
+  | Popr of int
 
   | Call of int
   | Syscall of int

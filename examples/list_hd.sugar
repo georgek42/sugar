@@ -1,3 +1,13 @@
+#let head l =
+#	match l with
+#	| h :: t -> h
+#	| [] -> 0
+#
+#let main () =
+#	let l = [1;2;3;4;5] in
+#	let hd = head l in
+#	print_int hd
+
 main:
 	# Store list on stack
 	pushnil
@@ -17,7 +27,7 @@ main:
 
 head:
 	# Store state
-	pop $10
+	popr $10
 
 	# Pop head off list on the stack, stack now has head; tail
 	hdl
@@ -26,8 +36,8 @@ head:
 
 match1:
 	# Clean un stack, discard t
-	pop $1
-	pop $2
+	popr $1
+	popr $2
 	pushr $1
 	jmp end
 

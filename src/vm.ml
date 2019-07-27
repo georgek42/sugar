@@ -73,7 +73,7 @@ let eval (op: opcode) =
     push v;
     incr pc
   )
-  | Pop r -> (
+  | Popr r -> (
     printd (sprintf "Popping value into $%d" r);
     let v = pop () in
     printd (sprintf "Storing value %s into $%d" (show_value v) r);

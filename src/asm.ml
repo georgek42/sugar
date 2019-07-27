@@ -6,7 +6,7 @@ type instr =
   | Pushnil
   | Pushi of int
   | Pushr of int
-  | Pop of int
+  | Popr of int
 
   | Syscall of string
   | Call of string
@@ -29,7 +29,7 @@ let show_instr (op: instr): string =
   | Label name -> sprintf "%s:" name
   | Pushi x -> sprintf "\tpushi %d" x
   | Pushr rid -> sprintf "\tpushr $%d" rid
-  | Pop rid -> sprintf "\tpop $%d" rid
+  | Popr rid -> sprintf "\tpopr $%d" rid
   | Syscall name -> sprintf "\tsyscall %s" name
   | Call name -> sprintf "\tcall %s" name
   | Ret -> "\tret"
@@ -54,7 +54,7 @@ let instr_of_string (s: string): instr =
     match instr with
     | "pushi" -> Pushi (Int.of_string arg)
     | "pushr" -> Pushr (Int.of_string (String.slice arg 1 (String.length arg)))
-    | "pop" -> Pop (Int.of_string (String.slice arg 1 (String.length arg)))
+    | "popr" -> Popr (Int.of_string (String.slice arg 1 (String.length arg)))
     | "syscall" -> Syscall arg
     | "call" -> Call arg
     | "jc" -> Jc arg
@@ -92,7 +92,7 @@ let%test "asm_string_roundtrip" =
     Label "main";
     Pushi 1;
     Pushr 2;
-    Pop 3;
+    Popr 3;
     Syscall "print_int";
     Call "main";
     Jc "main";
@@ -116,7 +116,7 @@ let%test "asm_file_roundtrip" =
     Label "main";
     Pushi 1;
     Pushr 2;
-    Pop 3;
+    Popr 3;
     Syscall "print_int";
     Call "main";
     Jc "main";

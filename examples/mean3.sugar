@@ -4,14 +4,14 @@ main:
 	pushi 1
 	call mean
 	syscall print_int
-	pop $1
+	popr $1
 	halt
 mean:
 	# Calculate (a + b + c) / 3
-	pop $2
+	popr $2
 	addi
 	addi
-	pop $1
+	popr $1
 	pushi 3
 	pushr $1
 	divi

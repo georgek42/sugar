@@ -20,7 +20,7 @@ let pack (op: opcode): bitstring =
   match op with
   | Pushi i -> make_unary 0 i
   | Pushr rid -> make_unary 1 rid
-  | Pop i -> make_unary 2 i
+  | Popr i -> make_unary 2 i
   | Syscall id -> make_unary 7 id
   | Call pc -> make_unary 6 pc
   | Ret -> make 3
@@ -54,7 +54,7 @@ let unpack (b: bitstring): program =
       )
       | 2 -> (
         match%bitstring !b with
-        | {| op: 8; param: 32 |} -> Pop (Int32.to_int_exn param) |> add; shift_by 40
+        | {| op: 8; param: 32 |} -> Popr (Int32.to_int_exn param) |> add; shift_by 40
         | {| _ |} -> raise Not_implemented
       )
       | 6 -> (
@@ -103,7 +103,7 @@ let%test "pack_roundtrip" =
   let prog = [|
     Pushi 1;
     Pushr 6;
-    Pop 3;
+    Popr 3;
     Call 4;
     Syscall 0;
     Jc 12;
@@ -126,7 +126,7 @@ let %test "pack_file_roundtrip" =
   let prog = [|
     Pushi 1;
     Pushr 6;
-    Pop 3;
+    Popr 3;
     Call 4;
     Syscall 0;
     Jc 12;
