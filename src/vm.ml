@@ -175,10 +175,13 @@ let eval (op: opcode) =
     printd (sprintf "Jumping to pc: %d" pc');
     pc := pc';
   )
+  | Halt -> (
+    printd "Halting execution";
+    pc := 99999999;
+  )
 
 let run (p: program) ?debug:(debug=false) =
   _debug := debug;
-  push (State (9999999, !cond, !reg)); (* Return from main *)
   let pend = Array.length p in
   while !pc < pend do
     eval (Array.get p !pc);

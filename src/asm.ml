@@ -13,6 +13,7 @@ type instr =
   | Ret
   | Jc of string
   | Jmp of string
+  | Halt
 
   | Cons
   | Hdl
@@ -39,6 +40,7 @@ let show_instr (op: instr): string =
   | Pushnil -> "\tpushnil"
   | Cons -> "\tcons"
   | Jmp name -> sprintf "\tjmp %s" name
+  | Halt -> "\thalt"
 
 type program = instr list
 
@@ -67,6 +69,7 @@ let instr_of_string (s: string): instr =
     | "hdl" -> Hdl
     | "pushnil" -> Pushnil
     | "cons" -> Cons
+    | "halt" -> Halt
     | _ -> raise (Parse_error (sprintf "Unknown instruction: %s" instr))
   )
   | _ -> raise (Parse_error (sprintf "Unrecognized token: %s" s))
@@ -95,6 +98,7 @@ let%test "asm_string_roundtrip" =
     Jc "main";
     Jmp "main";
     Pushnil;
+    Halt;
     Hdl;
     Cons;
     Ret;
@@ -118,6 +122,7 @@ let%test "asm_file_roundtrip" =
     Jc "main";
     Jmp "main";
     Pushnil;
+    Halt;
     Hdl;
     Cons;
     Ret;

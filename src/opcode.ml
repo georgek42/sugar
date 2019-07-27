@@ -9,6 +9,7 @@ type opcode =
   | Ret
   | Jc of int
   | Jmp of int
+  | Halt
 
   | Cons
   | Hdl

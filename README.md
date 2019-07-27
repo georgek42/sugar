@@ -29,6 +29,7 @@ The assembly provides a higher-level interface to the VM, with labels instead of
 * `ret` -- return from a function, return value on the top of the stack
 * `jc <pc>` -- jump to program counter pc if the condition bit is set, unset condition bit
 * `jmp <pc>` -- jump to program counter pc
+* `halt` -- exit program
 
 ### List operations
 * `cons`

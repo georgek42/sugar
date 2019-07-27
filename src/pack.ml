@@ -31,6 +31,7 @@ let pack (op: opcode): bitstring =
   | Pushnil -> make 10
   | Cons -> make 11
   | Jmp pc -> make_unary 12 pc
+  | Halt -> make 13
 
 let unpack (b: bitstring): program =
   let b = ref b in
@@ -82,6 +83,7 @@ let unpack (b: bitstring): program =
       | 8 -> add Hdl; shift_by 8
       | 10 -> add Pushnil; shift_by 8
       | 11 -> add Cons; shift_by 8
+      | 13 -> add Halt; shift_by 8
       | _ -> raise Not_implemented
   )
   done;
@@ -108,6 +110,7 @@ let%test "pack_roundtrip" =
     Ret;
     Addi;
     Hdl;
+    Halt;
     Cons;
     Jmp 11;
     Pushnil;
@@ -130,6 +133,7 @@ let %test "pack_file_roundtrip" =
     Ret;
     Addi;
     Hdl;
+    Halt;
     Cons;
     Jmp 11;
     Pushnil;

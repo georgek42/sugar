@@ -45,6 +45,7 @@ let compile (prog: Asm.program): Opcode.program =
     | Asm.Hdl -> Array.set prog' !pc Opcode.Hdl; incr pc
     | Asm.Pushnil -> Array.set prog' !pc Opcode.Pushnil; incr pc
     | Asm.Cons -> Array.set prog' !pc Opcode.Cons; incr pc
+    | Asm.Halt -> Array.set prog' !pc Opcode.Halt; incr pc
   ));
   Array.slice prog' 0 !pc
 
@@ -61,6 +62,7 @@ let%test "test_compile" =
     Label "mean";
     Jc "mean";
     Jmp "mean";
+    Halt;
     Pop 1;
     Addi;
     Addi;
@@ -83,6 +85,7 @@ let%test "test_compile" =
     Ret;
     Jc 6;
     Jmp 6;
+    Halt;
     Pop 1;
     Addi;
     Addi;
