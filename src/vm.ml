@@ -18,8 +18,6 @@ let rec show_value (v: value) =
 let _debug = ref false
 let printd msg = if !_debug then printf "%s\n" msg else ()
 
-type program = opcode array
-
 let pc: pc ref = ref 0
 
 let stack: st ref = ref (Stack.create ())
