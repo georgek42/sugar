@@ -1,0 +1,41 @@
+main:
+	# Store list on stack
+	pushnil
+	pushi 5
+	cons
+	pushi 4
+	cons
+	pushi 3
+	cons
+	pushi 2
+	cons
+	pushi 1
+	cons
+	call head
+	syscall print_int
+	halt
+
+head:
+	# Store state
+	pop $10
+
+	# Pop head off list on the stack, stack now has head; tail
+	hdl
+	# If the list is empty, hdl sets condition flag
+	jc match2
+
+match1:
+	# Clean un stack, discard t
+	pop $1
+	pop $2
+	pushr $1
+	jmp end
+
+match2:
+	pushi 0
+
+end:
+
+	# Restore state
+	pushr $10
+	ret
