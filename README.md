@@ -2,51 +2,41 @@
 
 A simple, slow, stack-based bytecode VM
 
-Example
-```ml
-let mean a b c = (a + b + c) / 3
-
-let main () =
-    let avg = mean 1 2 3 in
-    print_int avg
-
-```
-```mips
-mean:
-    pop $1
-    addi
-    addi
-    pop $2
-    pushi 3
-    pushr $2
-    divi
-    push $1
-    ret
-
-main:
-    pushi 3
-    pushi 2
-    pushi 1
-    call mean
-    call vm_print_int
-    ret
-```
-
 # Interface
+The VM executes bytecode defined in `src/opcode.ml`. A higher-level assembly-like language is available, which gets compiled to bytecode (`src/asm.ml`)
 
-# Operations
+## Syscalls
+* id: `1`, name: `print_int` -- prints an integer from the top of the stack (non-destructive_)
 
-* Unlimited number of registers
+## Assembly
+The assembly provides a higher-level interface to the VM, with labels instead of offsets. Forward-declarations are supported.
+* `<label:>` -- define label at current offset
+### Stack
+* `pushi <int>` -- push int onto stack
+* `pushr $<register_id` -- push from register onto stack
+* `pop $<register_id>` -- pop from stack into register
 
-## Stack
+### Control flow
+* `call <offset>` -- call a function at offset, arguments passed in the stack in callee order
+* `syscall <name>` -- execute a system call by name (see Syscalls)
+* `ret` -- return from a function, return value on the top of the stack
+
+### Binary operations
+* `addi` -- add two integers from the stack
+* `divi` -- divide the first integer by the second integer on the stack
+
+
+## Bytecode
+### Stack
 * `pushi <int>` -- push int onto stack
 * `pushr <register_id` -- push from register onto stack
 * `pop <register_id>` -- pop from stack into register
 
-## Control flow
-* `call <label>` -- call a function, arguments passed in the stack in callee order
+### Control flow
+* `call <offset>` -- call a function at offset, arguments passed in the stack in callee order
+* `syscall <id>` -- execute a system call with id (see #syscalls)
 * `ret` -- return from a function, return value on the top of the stack
 
-## Binary operations
+### Binary operations
 * `addi` -- add two integers from the stack
 * `divi` -- divide the first integer by the second integer on the stack
